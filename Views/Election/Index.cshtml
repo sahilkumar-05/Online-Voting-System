@@ -1,0 +1,73 @@
+﻿@model IEnumerable<ONLINEVS_Project.Models.Election>
+
+@{
+    ViewData["Title"] = "Elections";
+}
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold">Elections List</h1>
+        <div>
+            <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-secondary me-2">
+                <i class="bi bi-house-door-fill"></i> Back to Dashboard
+            </a>
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create New
+            </a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Title)</th>
+                        <th>@Html.DisplayNameFor(model => model.Description)</th>
+                        <th>@Html.DisplayNameFor(model => model.StartDate)</th>
+                        <th>@Html.DisplayNameFor(model => model.EndDate)</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@item.Description</td>
+                            <td>@item.StartDate.ToString("MMM dd, yyyy")</td>
+                            <td>@item.EndDate.ToString("MMM dd, yyyy")</td>
+                            <td class="text-center">
+                                <a asp-controller="Election" asp-action="Edit" asp-route-id="@item.ElectionId"
+                                   class="btn btn-sm btn-warning me-1">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </a>
+                                <a asp-controller="Election" asp-action="Details" asp-route-id="@item.ElectionId"
+                                   class="btn btn-sm btn-info me-1">
+                                    <i class="bi bi-eye"></i> View
+                                </a>
+                                <a asp-controller="Election" asp-action="Delete" asp-route-id="@item.ElectionId"
+                                   class="btn btn-sm btn-danger"
+                                   onclick="return confirm('Are you sure you want to delete this election?')">
+                                    <i class="bi bi-trash"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .btn i {
+        margin-right: 4px;
+    }
+</style>

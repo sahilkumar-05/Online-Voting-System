@@ -1,0 +1,77 @@
+﻿@model ONLINEVS_Project.Models.Candidate
+
+@{
+    ViewData["Title"] = "Create Candidate";
+}
+
+<style>
+    .form-container {
+        max-width: 55%;
+        margin: 30px auto;
+        background: #ffffff;
+        border-radius: 30px;
+        padding: 35px;
+        box-shadow: 0px 0px 15px rgba(0,0,0,0.15);
+    }
+
+    .form-box {
+        width: 100%;
+    }
+</style>
+
+<div class="form-container">
+
+    <div class="form-box">
+
+        <div class="card-header bg-white text-center mb-4">
+            <h2 class="fw-bold text-dark">Create New Candidate</h2>
+        </div>
+
+        <form asp-controller="Candidate" asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Candidate_Cnic" class="form-label fw-semibold"></label>
+                <input asp-for="Candidate_Cnic" class="form-control" />
+                <span asp-validation-for="Candidate_Cnic" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label fw-semibold"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Party" class="form-label fw-semibold"></label>
+                <input asp-for="Party" class="form-control" />
+                <span asp-validation-for="Party" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="ElectionId" class="form-label fw-semibold"></label>
+                <select asp-for="ElectionId"
+                        class="form-select"
+                        asp-items="ViewBag.ElectionId">
+                    <option value="">-- Select Election --</option>
+                </select>
+                <span asp-validation-for="ElectionId" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <input type="submit" value="Create Candidate" class="btn btn-primary px-4" />
+                <a asp-action="Index" class="text-decoration-none">Back to List</a>
+            </div>
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

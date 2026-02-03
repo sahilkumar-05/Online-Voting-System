@@ -1,0 +1,119 @@
+﻿@using static ONLINEVS_Project.Controllers.VotingController
+@model List<PartyResultViewModel>
+
+@{
+    ViewData["Title"] = "Home";
+    var role = Context.Session.GetString("UserRole");
+}
+
+<header class="bg-light py-5">
+    <div class="container text-center">
+
+        <h1 class="display-4 fw-bold mb-3">
+            Online Voting System
+        </h1>
+
+        <p class="lead text-muted mb-4">
+            Secure, transparent, and accessible voting platform
+        </p>
+
+        @* -------- GUEST -------- *@
+        @if (string.IsNullOrEmpty(role))
+        {
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a asp-controller="Admin" asp-action="Login"
+                   class="btn btn-primary btn-lg px-5">
+                    Admin Login
+                </a>
+
+                <a asp-controller="Voter" asp-action="Signup"
+                   class="btn btn-success btn-lg px-5">
+                    Voter Signup
+                </a>
+            </div>
+        }
+
+        @* -------- ADMIN -------- *@
+        else if (role == "Admin")
+        {
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary rounded mt-4">
+                <div class="container-fluid">
+                    <a class="navbar-brand fw-bold" href="#">Admin Panel</a>
+
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#adminNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="adminNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="Dashboard">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Voter" asp-action="Index">Voters</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Election" asp-action="Index">Elections</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Candidate" asp-action="Index">Candidates</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Logout">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        }
+
+        @* -------- VOTER -------- *@
+        else if (role == "Voter")
+        {
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded mt-4">
+                <div class="container-fluid">
+                    <a class="navbar-brand fw-bold" href="#">Voter Panel</a>
+
+                    <div class="collapse navbar-collapse show">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item"><a class="nav-link" asp-controller="Voter" asp-action="Dashboard">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Election" asp-action="Index">Elections</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Candidate" asp-action="Index">Candidates</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Logout">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        }
+
+    </div>
+</header>
+<section class="container my-5">
+    <div class="row text-center g-4">
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="fw-bold">Secure</h5>
+                    <p class="text-muted small">
+                        End-to-end encryption ensures your vote remains private.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="fw-bold">Transparent</h5>
+                    <p class="text-muted small">
+                        Real-time auditing with clear election results.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="fw-bold">Accessible</h5>
+                    <p class="text-muted small">
+                        Vote anytime, anywhere using any device.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>

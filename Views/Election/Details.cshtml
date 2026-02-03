@@ -1,0 +1,29 @@
+﻿@model ONLINEVS_Project.Models.Election
+
+@{
+    ViewData["Title"] = "Election Details";
+}
+
+<div class="form-container" style="max-width:55%; margin:30px auto; background:#fff; border-radius:30px; padding:35px; box-shadow:0 0 15px rgba(0,0,0,0.15);">
+    <div class="card-header bg-white text-center mb-4">
+        <h2 class="fw-bold text-dark">Election Details</h2>
+    </div>
+
+    <dl class="row">
+        <dt class="col-sm-3 fw-semibold">Title</dt>
+        <dd class="col-sm-9">@Model.Title</dd>
+
+        <dt class="col-sm-3 fw-semibold">Description</dt>
+        <dd class="col-sm-9">@Model.Description</dd>
+
+        <dt class="col-sm-3 fw-semibold">Start Date</dt>
+        <dd class="col-sm-9">@Model.StartDate.ToString("yyyy-MM-dd")</dd>
+
+        <dt class="col-sm-3 fw-semibold">End Date</dt>
+        <dd class="col-sm-9">@Model.EndDate.ToString("yyyy-MM-dd")</dd>
+    </dl>
+
+    <div class="mt-4">
+        <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-secondary px-4">Back to Dashboard</a>
+    </div>
+</div>

@@ -1,0 +1,189 @@
+﻿@model ONLINEVS_Project.Models.Voter
+
+@{
+    ViewData["Title"] = "Voter Dashboard";
+    var votedElections = ViewBag.VotedElectionIds as List<int> ?? new List<int>();
+    string successMsg = TempData["VoteSuccess"] as string;
+}
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .welcome-banner {
+        background: linear-gradient(135deg, #2c3e50, #3498db);
+        color: white;
+        padding: 30px;
+        border-radius: 20px;
+        margin-bottom: 25px;
+    }
+
+    .card-box {
+        border-radius: 18px;
+        box-shadow: 0 4px 12px rgba(0,0,0,.1);
+        background: white;
+        padding: 25px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background: #2c3e50;
+        color: white;
+        padding: 12px;
+        text-align: left;
+    }
+
+    td {
+        padding: 10px;
+        border-bottom: 1px solid #dee2e6;
+        vertical-align: top;
+    }
+
+    .vote-btn {
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 8px 18px;
+        border-radius: 20px;
+    }
+
+        .vote-btn:disabled {
+            background: #adb5bd;
+            cursor: not-allowed;
+        }
+
+    .ended-text {
+        color: #dc3545;
+        font-weight: bold;
+    }
+
+    .voted-text {
+        color: #6c757d;
+        font-weight: bold;
+    }
+</style>
+
+<div class="container-fluid px-4 py-3">
+
+    <!-- WELCOME -->
+    <div class="welcome-banner">
+        <h2 class="fw-bold">Welcome, @ViewBag.VoterName</h2>
+        <span class="badge bg-light text-dark">Voter ID: @ViewBag.VoterId</span>
+    </div>
+
+    <!-- SUCCESS MESSAGE -->
+    @if (!string.IsNullOrEmpty(successMsg))
+    {
+        <div class="alert alert-success text-center fw-bold fs-5">
+            @successMsg
+        </div>
+    }
+
+    <!-- DASHBOARD TABLE -->
+    <div class="card-box">
+        <h4 class="fw-bold mb-3">Elections</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Election</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status / Voting</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var election in ViewBag.Elections)
+                {
+                    bool alreadyVoted = votedElections.Contains(election.ElectionId);
+                    bool isExpired = DateTime.Now > election.EndDate;
+
+                    <tr class="@(isExpired ? "table-danger" : "")">
+                        <td class="fw-bold">@election.Title</td>
+                        <td>@election.StartDate.ToString("dd MMM yyyy")</td>
+                        <td>@election.EndDate.ToString("dd MMM yyyy")</td>
+
+                        <td>
+                            @if (alreadyVoted)
+                            {
+                                <span class="voted-text">
+                                    You already voted
+                                </span>
+                            }
+                            else if (isExpired)
+                            {
+                                @foreach (var candidate in election.Candidates)
+                                {
+                                    <div class="form-check text-muted">
+                                        <input class="form-check-input" type="radio" disabled />
+                                        <label class="form-check-label">
+                                            <strong>@candidate.Name</strong>
+                                            <span>(@candidate.Party)</span>
+                                        </label>
+                                    </div>
+                                }
+
+                                <span class="ended-text d-block mt-2">
+                                    Election Ended (Time Over)
+                                </span>
+                            }
+                            else
+                            {
+                                <form asp-controller="Voting"
+                                      asp-action="Vote"
+                                      method="post"
+                                      onsubmit="disableAllVotes()">
+
+                                    <input type="hidden"
+                                           name="ElectionId"
+                                           value="@election.ElectionId" />
+
+                                    @foreach (var candidate in election.Candidates)
+                                    {
+                                        <div class="form-check">
+                                            <input class="form-check-input"
+                                                   type="radio"
+                                                   name="CandidateId"
+                                                   value="@candidate.Candidate_ID"
+                                                   required />
+
+                                            <label class="form-check-label">
+                                                <strong>@candidate.Name</strong>
+                                                <span class="text-muted">
+                                                    (@candidate.Party)
+                                                </span>
+                                            </label>
+                                        </div>
+                                    }
+
+                                    <button type="submit"
+                                            class="vote-btn mt-2"
+                                            onclick="return confirm('Confirm your vote?')">
+                                        Vote Now
+                                    </button>
+                                </form>
+                            }
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function disableAllVotes() {
+        const buttons = document.querySelectorAll('.vote-btn');
+        buttons.forEach(btn => {
+            btn.disabled = true;
+            btn.innerText = 'Voted';
+        });
+    }
+</script>
